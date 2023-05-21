@@ -10,49 +10,51 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      epsilon;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [0 0 -1 0 0 0 0];
 
-internalField   uniform 14.855;
+internalField   uniform 10;
 
 boundaryField
 {
     inlet
     {
         type            fixedValue;
-        value           uniform 14.855;
+        value           $internalField;
     }
     ami1
     {
         type            cyclicAMI;
         value           $internalField;
     }
+    
+    wall1in
+    {
+        type            omegaWallFunction;
+        value           $internalField;
+    }
+    
+    wall1out
+    {
+        type            omegaWallFunction;
+        value           $internalField;
+    }
+    
     wall2in
     {
-        type            epsilonWallFunction;
-        value           uniform 14.855;
-    }
+        type            omegaWallFunction;
+        value           $internalField;
+    }    
+
     wall2out
     {
-        type            epsilonWallFunction;
-        value           uniform 14.855;
-    }    
-    
-    wall1in    // hub
-    {
-        type            epsilonWallFunction;
-        value           uniform 14.855;
+        type            omegaWallFunction;
+        value           $internalField;
     }
     
-    wall1out   // shroud
-    {
-        type            epsilonWallFunction;
-        value           uniform 14.855;
-    }    
-        
     ami2
     {
         type            cyclicAMI;
@@ -60,7 +62,9 @@ boundaryField
     }
     outlet
     {
-        type            zeroGradient;
+        type            inletOutlet;
+        value           $internalField;
+        inletValue      $internalField;
     }
  
 

@@ -13,37 +13,46 @@ FoamFile
     object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+pOut            1e5;
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform $pOut;
 
 boundaryField
 {
     outlet
     {
-       //type            zeroGradient;
-        type            fixedValue;
-        value           uniform 0;    
+        type            waveTransmissive;
+        field           p;
+        psi             thermo:psi;
+        gamma           1.4;
+        fieldInf        $pOut;
+        lInf            5;
+        value           uniform $pOut;
+    }
     
-    }     
     wall1out
     {
         type            zeroGradient;
     }
+    
     wall1in
     {
         type            zeroGradient;
     }
+    
     ami2
     {
         type            cyclicAMI;
         value           $internalField;
     }
+    
     wall2out
     {
         type            zeroGradient;
     }
+    
     wall2in
     {
         type            zeroGradient;
@@ -55,7 +64,8 @@ boundaryField
     }
     inlet
     {
-        type            zeroGradient;
+        type            freestreamPressure;
+        freestreamValue uniform $pOut;
     }
 }
 

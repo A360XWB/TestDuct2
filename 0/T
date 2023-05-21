@@ -9,34 +9,32 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       volScalarField;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform (1.0 0 0);
+internalField   uniform 297.15;
 
 boundaryField
 {
     outlet
     {
-        type            zeroGradient;
+        type            inletOutlet;
+        value           $internalField;
+        inletValue      $internalField;
     }
     
     wall1out
     {
-        type            noSlip; // shroud
+        type            zeroGradient;
     }
     
     wall1in
     {
-        type            noSlip;
-    /*
-        type            movingWallVelocity;
-        value           uniform (0 0 0);
-    */
+        type            zeroGradient;
     }
     
     ami2
@@ -47,20 +45,18 @@ boundaryField
     
     wall2out
     {
-        type            noSlip;
+        type            zeroGradient;
     }
     
     wall2in
     {
-        type            noSlip;
+        type            zeroGradient;
     }
-    
     ami1
     {
         type            cyclicAMI;
         value           $internalField;
     }
-    
     inlet
     {
         type            fixedValue;
